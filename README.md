@@ -10,3 +10,4 @@
 
 ## Model Serving using FASTAPI
 ![image](https://github.com/tekrajchhetri/mlops/assets/52251022/090a018a-bbc2-4753-89f8-fecbc357f072)
+![image](https://github.com/tekrajchhetri/mlops/assets/52251022/3481abc2-851f-478c-9681-ff9029486c99)
