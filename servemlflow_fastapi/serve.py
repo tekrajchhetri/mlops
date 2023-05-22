@@ -62,7 +62,7 @@ async def predict_house_price(house: HousingPrice):
     }
 
 def clean_n_process(df):
-    df = df.dropna()
+    df = df.dropna(True)
     categorical_columns = list(df.select_dtypes(exclude="number").columns)
     df = pd.get_dummies(df, columns=categorical_columns, dtype=int)
     return df
