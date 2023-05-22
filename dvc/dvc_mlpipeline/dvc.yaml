@@ -1,0 +1,70 @@
+plots:
+- ROC:
+    template: simple
+    x: fpr
+    y:
+      eval/live/plots/sklearn/roc/test.json: tpr
+      eval/live/plots/sklearn/roc/train.json: tpr
+- Confusion-Matrix:
+    template: confusion
+    x: actual
+    y:
+      eval/live/plots/sklearn/cm/test.json: predicted
+      eval/live/plots/sklearn/cm/train.json: predicted
+- Precision-Recall:
+    template: simple
+    x: recall
+    y:
+      eval/prc/test.json: precision
+      eval/prc/train.json: precision
+- eval/importance.png
+stages:
+  data_preprocessing:
+    cmd: python src/process.py
+    deps:
+    - src/process.py
+    outs:
+    - data/preprocessed
+    params:
+    - data_source.local_path
+  evaluate:
+    cmd: python src/evaluate.py model/trained_tuned_model.pkl data/split
+    deps:
+    - data/split
+    - model/trained_tuned_model.pkl
+    - src/evaluate.py
+    metrics:
+    - eval/live/metrics.json:
+        cache: false
+    outs:
+    - eval/importance.png
+    - eval/live/plots:
+        cache: false
+    - eval/prc:
+        cache: false
+  train:
+    cmd: python src/train_model.py data/features model/trained_tuned_model.pkl
+    deps:
+    - data/split
+    - src/train_model.py
+    outs:
+    - model/trained_tuned_model.pkl
+    params:
+    - base.random_state
+    - base.target_col
+    - model_dir
+    - split.dir
+    - split.test_file
+    - split.train_file
+    - train.n_est
+  train_test_preprocessed_split:
+    cmd: python src/data_split.py data/split
+    deps:
+    - data/preprocessed
+    - src/data_split.py
+    outs:
+    - data/split
+    params:
+    - split.dir
+    - split.test_file
+    - split.train_file
